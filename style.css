@@ -1,0 +1,271 @@
+/* ==========================================================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================================================== */
+:root {
+    --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #f0f9ff 100%);
+    --book-bg: #ffffff;
+    --left-panel-bg: #f8fafc;
+    --spine-color: #cbd5e1;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --shadow-main: 0 20px 45px -10px rgba(0, 0, 0, 0.12), 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+    --radius: 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-gradient);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. BOOK CONTAINER & SPREAD LAYOUT
+   ========================================================================== */
+#book-container {
+    width: 100%;
+    max-width: 960px;
+    height: 580px;
+    position: relative;
+    background-color: var(--book-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-main);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Page Visibility & Animations */
+.page {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+}
+
+.page.active-page {
+    display: flex;
+    animation: turnPage 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes turnPage {
+    0% {
+        opacity: 0;
+        transform: perspective(1000px) rotateY(-10deg) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: perspective(1000px) rotateY(0deg) scale(1);
+    }
+}
+
+/* ==========================================================================
+   3. BOOK PANELS (IMAGE & TEXT)
+   ========================================================================== */
+.book-side {
+    width: 50%;
+    height: 100%;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Left Panel: Image Container */
+.left-side {
+    background-color: var(--left-panel-bg);
+    border-right: 2px solid var(--spine-color);
+    align-items: center;
+}
+
+.image-box {
+    width: 450px;
+    height: 450vh;
+    background-color: #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.image-box:hover {
+    transform: scale(1.01);
+}
+
+.bio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* Right Panel: Biography Text */
+.right-side {
+    background-color: var(--book-bg);
+}
+
+.text-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.right-side h1 {
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.right-side .subtitle {
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.right-side h2 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.chapter-text {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   4. COVER PAGE OVERRIDES
+   ========================================================================== */
+.cover .left-side {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-right: none;
+}
+
+.cover .right-side {
+    background: #ffffff;
+}
+
+/* ==========================================================================
+   5. INTERACTIVE CONTROLS & BUTTONS
+   ========================================================================== */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.tts-btn {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    transition: all 0.2s ease;
+}
+
+.tts-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.tts-btn:active {
+    transform: translateY(0);
+}
+
+.prev-btn, .next-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.prev-btn i, .next-btn i {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+}
+
+.prev-btn:hover, .next-btn:hover {
+    background: #f1f5f9;
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   6. RESPONSIVENESS (MOBILE & TABLET STYLES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    #book-container {
+        height: auto;
+        min-height: 85vh;
+        border-radius: 16px;
+    }
+
+    .page {
+        flex-direction: column; /* Stack image on top, text on bottom */
+    }
+
+    .book-side {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .left-side {
+        height: 240px;
+        border-right: none;
+        border-bottom: 2px solid var(--spine-color);
+    }
+
+    .right-side {
+        height: auto;
+    }
+
+    .right-side h1 {
+        font-size: 1.8rem;
+    }
+
+    .right-side h2 {
+        font-size: 1.25rem;
+    }
+
+    .chapter-text {
+        font-size: 0.92rem;
+        margin-bottom: 15px;
+    }
+
+    .controls {
+        justify-content: space-between;
+    }
+}
