@@ -11,10 +11,10 @@
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --shadow-main: 0 20px 45px -10px rgba(0, 0, 0, 0.12), 0 10px 20px -5px rgba(0, 0, 0, 0.06);
-    --radius: 20px;
+    --radius: clamp(12px, 2vw, 20px);
 }
 
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -24,10 +24,11 @@ body {
     background: var(--bg-gradient);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: clamp(10px, 2vw, 24px);
     overflow-x: hidden;
 }
 
@@ -37,7 +38,8 @@ body {
 #book-container {
     width: 100%;
     max-width: 960px;
-    height: 580px;
+    /* Flexible height using clamp to maintain proportion without overflow */
+    height: clamp(520px, 80vh, 650px);
     position: relative;
     background-color: var(--book-bg);
     border-radius: var(--radius);
@@ -76,10 +78,10 @@ body {
 .book-side {
     width: 50%;
     height: 100%;
-    padding: 2.5rem;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 /* Left Panel: Image Container */
@@ -87,11 +89,14 @@ body {
     background-color: var(--left-panel-bg);
     border-right: 2px solid var(--spine-color);
     align-items: center;
+    justify-content: center;
 }
 
 .image-box {
-    width: 450px;
-    height: 450vh;
+    width: 100%;
+    max-width: 380px;
+    height: 100%;
+    max-height: 100%;
     background-color: #e2e8f0;
     border-radius: 14px;
     overflow: hidden;
@@ -116,36 +121,38 @@ body {
 /* Right Panel: Biography Text */
 .right-side {
     background-color: var(--book-bg);
+    overflow-y: auto; /* Handles edge cases where text exceeds panel height */
 }
 
 .text-box {
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 1rem;
 }
 
 .right-side h1 {
-    font-size: 2.2rem;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
     color: var(--text-primary);
     line-height: 1.2;
 }
 
 .right-side .subtitle {
-    font-size: 1.05rem;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
     color: var(--primary-color);
     font-weight: 600;
 }
 
 .right-side h2 {
-    font-size: 1.4rem;
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
     color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
 .chapter-text {
-    font-size: 0.98rem;
-    line-height: 1.65;
+    font-size: clamp(0.875rem, 1.1vw, 0.98rem);
+    line-height: 1.6;
     color: var(--text-secondary);
 }
 
@@ -167,15 +174,17 @@ body {
 .controls {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    margin-top: 15px;
+    margin-top: auto;
+    padding-top: 10px;
 }
 
 .tts-btn {
     background-color: var(--primary-color);
     color: #ffffff;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 18px;
     border-radius: 25px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -185,6 +194,7 @@ body {
     gap: 8px;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .tts-btn:hover {
@@ -210,7 +220,7 @@ body {
 }
 
 .prev-btn i, .next-btn i {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: var(--primary-color);
 }
 
@@ -220,52 +230,71 @@ body {
 }
 
 /* ==========================================================================
-   6. RESPONSIVENESS (MOBILE & TABLET STYLES)
+   6. RESPONSIVENESS & BREAKPOINTS
    ========================================================================== */
+
+/* Tablets & Mobile Devices (Portrait & Small Screens) */
 @media (max-width: 768px) {
     body {
-        padding: 10px;
+        padding: 8px;
+        align-items: flex-start; /* Prevents vertical clipping on short mobile screens */
     }
 
     #book-container {
         height: auto;
-        min-height: 85vh;
-        border-radius: 16px;
+        min-height: calc(100dvh - 16px);
+        max-height: none;
     }
 
-    .page {
-        flex-direction: column; /* Stack image on top, text on bottom */
+    .page.active-page {
+        flex-direction: column; /* Stack image side on top, text side below */
     }
 
     .book-side {
         width: 100%;
-        padding: 1.5rem;
+        height: auto;
+        padding: 1.25rem 1rem;
     }
 
     .left-side {
-        height: 240px;
+        height: 220px;
         border-right: none;
         border-bottom: 2px solid var(--spine-color);
     }
 
+    .image-box {
+        width: 100%;
+        height: 100%;
+        max-width: 260px;
+    }
+
     .right-side {
-        height: auto;
+        flex: 1;
+        overflow-y: visible;
     }
 
-    .right-side h1 {
-        font-size: 1.8rem;
-    }
-
-    .right-side h2 {
-        font-size: 1.25rem;
-    }
-
-    .chapter-text {
-        font-size: 0.92rem;
-        margin-bottom: 15px;
+    .text-box {
+        justify-content: flex-start;
+        gap: 0.75rem;
     }
 
     .controls {
-        justify-content: space-between;
+        margin-top: 15px;
+    }
+}
+
+/* Small Mobile Devices (< 480px) */
+@media (max-width: 480px) {
+    .left-side {
+        height: 180px;
+    }
+
+    .tts-btn {
+        padding: 8px 14px;
+        font-size: 0.825rem;
+    }
+
+    .prev-btn i, .next-btn i {
+        font-size: 1.35rem;
     }
 }
